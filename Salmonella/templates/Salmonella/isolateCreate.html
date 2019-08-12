@@ -1,0 +1,45 @@
+{% extends "Salmonella/base.html" %}
+
+{% block head_static %}
+{% load static %}
+<script src="{% static 'Salmonella/javascript/theDatePicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'Salmonella/css/isolateCreateEdit.css' %}">
+{% endblock %}
+
+{% block title_local %}
+create new isolate
+{% endblock %}
+
+{% block body_local %}
+
+<h2 class="title is-3"> Create a new isolate </h2>
+
+<form action="" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+
+	<table>
+		{{ form_iso.as_table }}
+	</table>
+
+	<br>
+	<br>
+
+	<p class="title is-5"> Location </p>
+	<table>
+		{{ form_loc.as_table }}
+	</table>
+
+	<br>
+	<br>
+
+	<p class="title is-5"> Isolation </p>
+	<table>
+		{{ form_isln.as_table }}
+	</table>
+
+    <input type="submit" value="Save" class="btn btn-outline-secondary">
+</form>
+
+
+
+{% endblock %}

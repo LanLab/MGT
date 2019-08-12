@@ -1,0 +1,50 @@
+{% extends "Home/base.html" %}
+
+{% block titleName %}
+{% block title_local %}{% endblock %}
+{% endblock %}
+
+
+{% block page_content %}
+{% load for_display %}
+
+{% url 'Salmonella:index' as url_index %}
+{% url 'Salmonella:isolate_list' as url_publicIsolates %}
+{% url 'Salmonella:project_list' as url_projectList %}
+{% url 'Salmonella:project_detail' as url_projectDetail %}
+
+<ul class="nav bg-light">
+	<li class="nav-item">
+		<a class="nav-link {% isSame url_index %}" href="{{ url_index }}"> <u> {{ request.session.organism|safe }} </u> </a>
+	</li>
+
+	<li class="nav-item">
+		<a class="nav-link {% isSame url_publicIsolates %}" href="{{ url_publicIsolates }}"> Isolates </a>
+	</li>
+
+	{% if user.is_authenticated %}
+
+		<li class="nav-item">
+			<a class="nav-link {% isSame url_projectList %}" href="{{ url_projectList }}" href="{% url 'Salmonella:project_list' %}"> Projects </a>
+		</li>
+
+		<li class="nav-item">
+			<a class="nav-link"> Genome query </a>
+		</li>
+
+	{% endif %}
+
+</ul>
+
+
+
+
+<hr>
+
+<!-- h1> Salmonella database</h1 -->
+
+<div class="container-fluid">
+	{% block body_local %}{% endblock %}
+</div>
+
+{% endblock %}

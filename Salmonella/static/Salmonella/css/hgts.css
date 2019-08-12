@@ -1,0 +1,38 @@
+td.schemeHl {
+	background-color: #99ccff;
+}
+
+td.schemeSel {
+	background-color: #66ccff;
+}
+
+td.schemeHl.schemeSel {
+	background-color: #3399ff;
+}
+
+td.similarAp {
+	background-color: #FFFF99;
+}
+
+h3.pageType {
+	color: #A8A8A8;
+}
+
+p.grayOut {
+	color: #808080;
+}
+
+table.fixed{
+	table-layout: fixed;
+    width: 1200px;
+    border-collapse:collapse;
+}
+
+th.fixed{
+	width: 9%;
+	overflow: hidden;
+}
+td.fixed{
+    width: 9%;
+	overflow: hidden;
+}

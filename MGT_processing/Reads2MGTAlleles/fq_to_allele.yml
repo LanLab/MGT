@@ -1,0 +1,15 @@
+name: read2allele
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.6.6
+  - shovill=1.0.1
+  - assembly-stats=1.0.1
+  - mlst
+  - kraken=1.1
+  - biopython=1.72
+  - mafft=7.407
+  - pip:
+    - sistr_cmd

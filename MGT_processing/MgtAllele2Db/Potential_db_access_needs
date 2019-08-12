@@ -1,0 +1,22 @@
+
+Info/queries that will be needed in script process
+
+
+Subsetting
+    - get all hgts with a given CC
+        - combine these hgts from two or more levels
+        - get CCs for larger scheme/s
+    - get STs that are assigned that CC in larger scheme/s
+    - get alleles corresponding to those STs (as numbers and linked files) ** ONLY FOR THOSE LOCI THAT ARE NOT ALREADY CALLED
+        - load sequeunces from linked files to compare
+
+ST calling
+    - if 0s in AP need to search for any exact matches ignoring those 0s
+    - actually same for all AP searches as may match ST with no perfect ST
+    - again needs search with a missmatch system / ability to ignore 0s
+
+CC calling
+    new ST = new allele profile
+    - match allele profile against existing to get those with 1 difference (or more for ODCs) - need to have missmatch search
+    2 options   - load APs into memory and commpare as strings/lists/dicts whatever
+                -work out how to run a search with N missmatches allowed AND ignoring certain pairs.

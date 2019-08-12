@@ -1,0 +1,88 @@
+{% extends "Salmonella/base.html" %}
+
+{% block head_static %}
+{% load static %}
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="{% static 'Salmonella/javascript/chartingData.js' %}"></script>
+<link rel="stylesheet" href="{% static 'Salmonella/css/chartingData.css' %}">
+
+
+{% endblock %}
+
+{% block title_local %}
+{{ organism }}
+{% endblock %}
+
+
+{% block body_local %}
+{% load common %}
+
+
+<p class="title is-3"> {{ request.session.organism|safe }} </p>
+<br>
+<p class="subtitle"> Database statistics: </p>
+
+<div class="box">
+	<table class="table">
+		<tr>
+			<td>
+				Total public isolates:
+			</td>
+			<td>
+				 {{ isoCount }}
+			 </td>
+		 </tr>
+		 <tr>
+			 <td>
+				 Total assigned:
+			 </td>
+			 <td>
+				 {{ isoCount_assigned }}
+			 </td>
+		 </tr>
+	</table>
+</div>
+
+<a class="button is-primary is-rounded" href="{% url 'Salmonella:isolate_list' %}"> All isolates </a>
+<br>
+<br>
+<br>
+
+<p class="subtitle is-3"> Current MGT trends </p>
+
+{% if mgts %}
+
+	{% for mgt in mgts|loadjson %}
+
+		<button id="btn_{{mgt.table_name}}"  onclick="javascript:getDataForCharting('{{ mgt.table_name }}', '{% url 'Salmonella:topStSummary' %}');"> {{ mgt.scheme__display_name }} </button>
+
+	{% endfor %}
+	<br>
+	<br>
+
+	<div class="columns is-gapless">
+		{% for mgt in mgts|loadjson %}
+			<div id="{{mgt.table_name}}" class="column" style="display: none;" height=40% width=500>
+				<p class="subtitle is-5">Top 5 {{ mgt.scheme__display_name }}-ST distribution </p>
+				<div id="theChart_{{mgt.table_name}}">
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+
+{% endif %}
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+{% endblock %}
+
+
+
+# https://bost.ocks.org/mike/bar/

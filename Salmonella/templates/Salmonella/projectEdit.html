@@ -1,0 +1,40 @@
+{% extends "Salmonella/base.html" %}
+{% block title_local %}
+Edit project
+{% endblock %}
+
+{% load static %}
+
+{% block head_static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'Salmonella/css/projectList.css' %}">
+
+{% endblock %}
+
+{% block body_local %}
+
+
+<br>
+<h2 class="title is-5"> Edit project details </h2>
+
+    <br>
+  	<form method="post" action="">
+    {% csrf_token %}
+    	<table>
+       		{{ form.as_table }}
+     	</table>
+		<br>
+		<br>
+     	<table>
+     		<tr>
+				<td>
+			     	<input type="submit" value="Update" class="btn btn-outline-warning">
+   				</td>
+   				<td>
+   					<a href="{% url 'Salmonella:project_detail' object.id %}" class="btn btn-outline-secondary">Cancel</a>
+   				</td>
+   			</tr>
+   		</table>
+   </form>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+td.theHl {
+	background-color: yellow;
+}
+
+td.theSel {
+	background-color: lightskyblue;
+}
+
+td.theHl.theSel{
+	background-color: aquamarine;
+}
+
+
+
+table.fixed {
+	display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}

@@ -1,0 +1,100 @@
+{% extends "Salmonella/base.html" %}
+{% block title_local %}
+Delete project and all its isolates
+{% endblock %}
+
+
+
+{% block body_local %}
+
+
+	<h2 class="title is-3"><i> Are you sure you want to delete this project, and all its associated isolates? </i></h2>
+
+
+
+	<table class="table">
+		<tr>
+			<td> Project name </td>
+			<td> {{ object.identifier }} </td>
+		</tr>
+		<!--tr>
+			<td> Privacy status </td>
+			<td> {{ object.get_privacy_status_display }} </td>
+		</tr-->
+		<!-- tr>
+			<td> User id </td>
+			<td> {{ object.user }} </td>
+		</tr -->
+		<tr>
+			<td> Date created </td>
+			<td> {{ object.date_created }} </td>
+		</tr>
+		<tr>
+			<td> Date modified </td>
+			<td> {{ object.date_modified }} </td>
+		</tr>
+
+	</table>
+
+	<h3><i> Isolates in this project </i></h3>
+
+	{% if isolates|length == 0 %}
+		No isolates here.
+	{% endif %}
+
+	{% if isolates|length > 0 %}
+	<table border=1>
+		<tr>
+			<th> Isolate name </th>
+			<th> Server run status </th>
+			<th> MGT assignment status </th>
+			<th> Privacy status </th>
+			<th> Date created </th>
+			<th> Date modified </th>
+			<th> </th>
+			<th> </th>
+		</tr>
+
+		{% for isolate in isolates %}
+		<tr>
+			<td> {{ isolate.identifier }} </td>
+			<td> {{ isolate.get_server_status_display }} </td>
+			<td>
+				{% if isolate.assignment_status %}
+				{{ isolate.get_assignment_status_display }}
+				{% else %}
+				Not assigned
+				{% endif %}
+			</td>
+			<td> {{ isolate.get_privacy_status_display }} </td>
+			<td> {{ isolate.date_created }} </td>
+			<td> {{ isolate.date_modified }} </td>
+			<td> <a href="{% url 'Salmonella:isolate_detail' isolate.id %}">Details</a></td>
+		</tr>
+		{% endfor %}
+	</table>
+
+
+	{% endif %}
+
+	<br>
+	<br>
+
+	<form action="" method="post">
+		{% csrf_token %}
+
+	    {{ form.as_table }}
+
+	    <table>
+			<tr>
+				<td>
+				    <input type="submit" value="Confirm project delete" class="btn btn-outline-danger">
+				</td>
+				<td>
+					<a href="{% url 'Salmonella:project_detail' object.id %}" class="btn btn-outline-secondary">Cancel </a>
+				</td>
+			</tr>
+		</table>
+	</form>
+
+{% endblock %}

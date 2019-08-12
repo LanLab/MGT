@@ -1,0 +1,8 @@
+Hi,
+
+Click the link below, or copy and paste it into a web-browser:
+
+{{ SITE_URL }}/accounts/activate/{{ activation_key }}
+
+Best wishes,
+the MGTdb team.

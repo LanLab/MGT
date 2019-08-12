@@ -1,0 +1,45 @@
+{% extends "Home/base.html" %}
+{% block titleName %}
+Manage projects
+{% endblock %}
+
+{% block page_content %}
+<div class="container-fluid">
+	<h2 class="title is-3">  My projects </h2>
+	<br>
+
+	{% for appName, dict_counts in userStats.items %}
+		
+		<h3 class="subtitle is-4"> <a href="{% url appName|add:":project_list"  %}"> {{ appName }} </a> </h3>
+
+		<div class="container">
+			{% if dict_counts.numProjects > 0 %}
+
+				<ul class="list-group">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+	    				Number of projects
+	    				<span class="badge badge-dark badge-pill"> {{ dict_counts.numProjects }}</span>
+	  				</li>
+
+	  				<li class="list-group-item d-flex justify-content-between align-items-center">
+	    				Number of isolates
+	    				<span class="badge badge-dark badge-pill"> {{ dict_counts.numIsolates }}</span>
+	  				</li>
+
+				</ul>
+
+
+			{% else %}
+
+				No projects here.
+
+			{% endif %}
+
+		</div>
+
+
+	{% endfor %}
+
+
+</div>
+{% endblock %}

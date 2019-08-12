@@ -1,0 +1,138 @@
+{% extends "Salmonella/base.html" %}
+{% block title_local %}
+Home
+{% endblock %}
+
+
+
+{% block head_static %}
+
+
+{% load static %}
+<script src="{% static 'Salmonella/javascript/displaySearchBox.js' %}"></script>
+<script src="{% static 'Salmonella/javascript/layoutApCcTable.js' %}"></script>
+<script src="{% static 'Salmonella/javascript/packageAndSend.js' %}"></script>
+<script src="{% static 'Salmonella/javascript/simpleHelpers.js' %}"></script>
+<link rel="stylesheet" href="{% static 'Salmonella/css/isoViewComb.css' %}">
+{% endblock %}
+
+
+{% block body_local %}
+{% load common %}
+
+
+<script type="text/javascript">
+
+	bindEnterToSearch("filterIsolates");
+
+
+	$(document).ready(function() {
+		//doApLayout( JSON.parse('{{ isolates|escapejs }}'), 0, 1, JSON.parse('{{ request.session.apInfo|escapejs}}'), JSON.parse('{{ request.session.epiInfo|safe }}'));
+		$('#isolateTable').hide();
+
+		addRowToTbl(searchTbl,
+		JSON.parse('{{isoHeader|escapejs}}'), JSON.parse('{{apHeader|escapejs}}'), JSON.parse('{{ccHeader|escapejs}}'), JSON.parse('{{epiHeader|escapejs}}'),
+		JSON.parse('{{locHeader|escapejs}}'),
+		JSON.parse('{{islnHeader|escapejs}}'));
+		console.log("document ready!, call ajax to load and get data.");
+
+		getInitialProjData('{% url 'Salmonella:initial_projectIsolates' %}', '{{ object.id }}',null,null,null,null);
+
+	});
+
+
+</script>
+
+<div>
+	<h3 class="title is-4"> Project details: {{ object.identifier }} </h3>
+
+	<div style="max-width: 60%">
+		<table class="table table-sm table-bordered">
+			<tr>
+				<th> Date created </th>
+				<td> {{ object.date_created }} </td>
+			</tr>
+			<tr>
+				<th> Date modified </th>
+				<td> {{ object.date_modified }} </td>
+			</tr>
+
+			<tr>
+				<th> Total number of isolates </th>
+				<td> {{ object.isolate_set.count }} </td>
+			</tr>
+		</table>
+
+		<a href="{% url 'Salmonella:project_edit' project.id %}"  class="btn btn-outline-warning">Edit</a>
+
+		<a href="{% url 'Salmonella:project_delete' project.id %}" class="btn btn-outline-danger">Delete</a>
+
+		<a href="{% url 'Salmonella:project_list' %}" class="btn btn-outline-secondary">Back to projects</a>
+	</div>
+
+	<br>
+	<br>
+	<br>
+
+
+	<p class="title is-5"> Isolates </p>
+
+	<form action="{% url 'Salmonella:isolate_create' %}" method="get">
+		{% csrf_token %}
+		<input type="hidden" name="project" value={{ object.id }}>
+		<input type="submit" value="+ Upload new isolate"   class="btn btn-link">
+	</form>
+
+	<br>
+	<br>
+	<br>
+
+	<div class="container">
+		<p class="subtitle is-5"> Search isolates in this project: <span class="button" onclick="javascript:activateTheModal('searchIsoHelp');"> ? </span> </p>
+
+		<table id="searchTbl" class="table is-bordered">
+		</table>
+
+		<button class="button is-rounded is-small is-primary is-outlined" onclick="javascript:addRowToTbl(searchTbl, true, JSON.parse('{{apHeader|escapejs}}'), JSON.parse('{{ccHeader|escapejs}}'), JSON.parse('{{epiHeader|escapejs}}'), JSON.parse('{{isoHeader|escapejs}}'),
+		JSON.parse('{{islnHeader|escapejs}}'),
+		JSON.parse('{{locHeader|escapejs}}'));"> Add row </button>
+		<button id="filterIsolates" class="button is-rounded is-small is-primary" disabled onclick="javascript:searchInProj('{% url 'Salmonella:search_projectDetail' %}', 'searchTbl', JSON.parse('{{isoHeader|escapejs}}'), JSON.parse('{{apHeader|escapejs}}'), JSON.parse('{{ccHeader|escapejs}}'), JSON.parse('{{epiHeader|escapejs}}'), JSON.parse('{{locHeader|escapejs}}'), JSON.parse('{{islnHeader|escapejs}}'),'{{ object.id }}');"> Search </button>
+	</div>
+
+
+	<div id="wrapper">
+		{% include 'Salmonella/isolateTable.html' %}
+	</div>
+
+	<div id="ajaxSearching">
+		<p> Searching . . . please wait. </p>
+	</div>
+
+
+	<div id="searchIsoHelp" class="modal">
+		<div class="modal-background"></div>
+			<div class="modal-content">
+				<article class="message is-light">
+					<div class="message-header">
+						<p class="subtitle"> Help - Filter isolates </p>
+					</div>
+					<div class="message-body">
+						<p> <b> Multiple attributes </b> of an isolate can be filtered for. When multiple attributes are searched, an "and" search is performed. </p>
+						<br>
+						<p> When a <b> time range </b> is set to the same value, then an exact search is performed. </p>
+						<br>
+						<p> <b> Date </b> should be in the format: dd/mm/yyyy </p>
+						<br>
+						<p> <b> CC </b> is clonal cluster. </p>
+						<br>
+						<p> <b> AP </b> is allelic profile. </p>
+						<br>
+						<p> <b> ODC </b> is outbreak detection cluster (based on MGT9 AP), where the number denotes maximum allele differences between an isolate and atleast one other isolate in the cluster. </p>
+					</div>
+				</article>
+				<button class="button is-primary" onclick="javascript:deactivateTheModal('searchIsoHelp');"> Done </button>
+			</div>
+		<button class="modal-close is-large" aria-label="close" onclick="javascript:deactivateTheModal('searchIsoHelp');"></button>
+	</div>
+</div>
+{% endblock %}

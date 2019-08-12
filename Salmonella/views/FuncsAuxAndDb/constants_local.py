@@ -1,0 +1,5 @@
+InitialIsolates = "pg_initialIsolates"
+InitialProjIsolates = "pg_initialProjIsolates"
+SearchIsolateDetail = "pg_searchIsoDetail"
+SearchIsolateList = "pg_searchIsoList"
+SearchProjectDetail = "pg_searchProjDetail"

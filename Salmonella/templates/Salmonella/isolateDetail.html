@@ -1,0 +1,273 @@
+{% extends "Salmonella/base.html" %}
+
+{% block title_local %}
+Isolate details
+{% endblock %}
+
+{% load static %}
+
+{% block head_static %}
+
+<script src="{% static 'Salmonella/javascript/similarStrains.js' %}"></script>
+
+<script src="{% static 'Salmonella/javascript/similarStrainsAjax.js' %}"></script>
+
+<script src="{% static 'Salmonella/javascript/displaySearchBox.js' %}"></script>
+<script src="{% static 'Salmonella/javascript/layoutApCcTable.js' %}"></script>
+<script src="{% static 'Salmonella/javascript/packageAndSend.js' %}"></script>
+<script src="{% static 'Salmonella/javascript/simpleHelpers.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'Salmonella/css/similarStrains.css' %}">
+
+{% endblock %}
+
+
+{% block body_local %}
+
+{% load common %}
+{% load countries %}
+
+<div id="simStrainsPuIso" class="modal">
+	<div class="modal-background"></div>
+		<div class="modal-content">
+			<article class="message is-light">
+				<div class="message-header">
+					<p class="subtitle"> Help - Search similar strains </p>
+				</div>
+				<div class="message-body">
+					<p> Click on values in the tables above, and select them to search for similar strains. </p>
+				</div>
+			</article>
+			<button class="button is-primary" onclick="javascript:deactivateTheModal('simStrainsPuIso');"> Done </button>
+		</div>
+	<button class="modal-close is-large" aria-label="close" onclick="javascript:deactivateTheModal('simStrainsPuIso');"></button>
+</div>
+
+<p class="subtitle is-4"> Isolate details: {{ isolate.identifier }} </p>
+
+<div class="columns">
+	<div class="column">
+		<p class="title is-6"> Isolation </p>
+		{% if not isolate.isolation %}
+			<p> Isolation details are not known. </p>
+		{% else %}
+			<table class="table is-bordered" id="tblIsolation">
+				{% for isln in islnHeader|loadjson %}
+					<tr>
+						<td>
+							{{ isln.display_name }}
+						</td>
+						{% if isolate.isolation|getApVal:isln.table_name != None %}
+							<td id={{isln.table_name}} onmouseenter='doSimHl("{{isln.table_name}}", "theHl");' onmouseleave='removeSimHl("{{isln.table_name}}", "theHl");' onclick='doSmpToggle("{{isln.table_name}}",  "theSel");'>
+								{{ isolate.isolation|getApVal:isln.table_name }}
+							</td>
+						{% else %}
+							<td>
+								-
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+		</div>
+  	<div class="column">
+		<p class="title is-6"> Location </p>
+		{% if not isolate.location %}
+			<p> Location details are not known. </p>
+		{% else %}
+			<table class="table is-bordered" id="tblLocation">
+				{% for loc in locHeader|loadjson %}
+					<tr>
+						<td>
+							{{ loc.display_name }}
+						</td>
+						{% if isolate.location|getApVal:loc.table_name != None %}
+							<td  id={{ loc.table_name }} onmouseenter='doSimHl("{{loc.table_name}}", "theHl");' onmouseleave='removeSimHl("{{loc.table_name}}", "theHl");' onclick='doSmpToggle("{{loc.table_name}}", "theSel");'>
+
+								{{ isolate.location|getApVal:loc.table_name }}
+
+
+							</td>
+						{% else %}
+							<td>
+								-
+							</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</table>
+		{% endif %}
+  </div>
+</div>
+
+Server run status: {{ isolate.get_server_status_display }}
+
+
+<br>
+<br>
+
+MGT assignment details:
+{% if not isolate.assignment_status %}
+	Not assigned.
+	<br>
+	<br>
+
+{% elif isolate.assignment_status %}
+
+	{{isolate.get_assignment_status_display}}
+	<br>
+
+{% endif %}
+
+{% if isolate.assignment_status == 'A' %}
+	<table class="table is-narrow is-bordered">
+		<tr>
+			<td>
+				<b> Sequence types </b>
+			</td>
+
+			{% for i in apHeader|loadjson %}
+				<td>
+					{{ i.scheme__display_name }}
+				</td>
+			{% endfor %}
+		</tr>
+
+		<tr id="rowAp">
+
+				<script>
+					rowLayoutOfApsAndCcs("rowAp", JSON.parse('{{ apHeader|escapejs }}'), JSON.parse('{{ json_isoHgt|escapejs }}'), true);
+				</script>
+
+
+		</tr>
+
+		<tr id="rowApTmp">
+		</tr>
+
+
+		<tr>
+			<td>
+				<b> Clonal complexes </b>
+			</td>
+
+			{% for i in ccHeader|loadjson %}
+				<td>
+					{{ i.display_name }}
+				</td>
+			{% endfor %}
+		</tr>
+		<tr id="rowCc">
+
+			<script>
+				rowLayoutOfApsAndCcs("rowCc", JSON.parse('{{ ccHeader|escapejs }}'), JSON.parse('{{ json_isoHgt|escapejs }}'), false);
+			</script>
+
+		</tr>
+
+		<tr>
+			<td>
+				<b> Outbreak detection clusters </b>
+			</td>
+			{% for i in epiHeader|loadjson %}
+				<td>
+					{{ i.display_name }}
+				</td>
+			{% endfor %}
+		</tr>
+
+		<tr id="rowEpi">
+
+			<script>
+				rowLayoutOfApsAndCcs("rowEpi", JSON.parse('{{ epiHeader|escapejs }}'), JSON.parse('{{ json_isoHgt|escapejs }}'), false);
+			</script>
+
+		</tr>
+	</table>
+{% endif %}
+
+{% if user.is_authenticated %}
+	{% if isUserIso %}
+		You added this isolate to MGTdb.
+
+		<table class="table is-bordered" id="tblProject">
+			{% for projInfo in projHeader|loadjson %}
+				<tr>
+					<td>
+						 {{ projInfo.display_name }}
+					</td>
+					<td id={{ projInfo.table_name }} onmouseenter='doSimHl("{{projInfo.table_name}}", "theHl");' onmouseleave='removeSimHl("{{projInfo.table_name}}", "theHl");' onclick='doSmpToggle("{{projInfo.table_name}}", "theSel");'>
+						{{ isolate.project }}
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+
+		{% if isolate.file_alleles %}
+			Uploaded file name: {{ isolate.file_alleles.name|filenameOnly }}
+		{% elif isolate.file_forward and isolate.file_reverse %}
+			Uploaded forward file:
+			{{ isolate.file_forward.name|filenameOnly }} <br>
+			Uploaded reverse file: {{ isolate.file_reverse.name|filenameOnly }}
+		{% endif %}
+		<br>
+		<br>
+
+
+		<a href="{% url 'Salmonella:isolate_edit' isolate.id %}"  class="btn btn-outline-warning">Edit</a>
+
+		<a href="{% url 'Salmonella:isolate_delete' isolate.id %}" class="btn btn-outline-danger">Delete</a>
+
+		<a href="{% url 'Salmonella:project_detail' isolate.project.id %}" class="btn btn-outline-secondary">Back to project</a>
+	{% endif %}
+{% endif %}
+<br>
+<br>
+<br>
+
+
+<button id="searchSimStrains" class="button is-rounded is-small is-primary" onclick="isolateDetailSearch({{ json_isoHgt }},  '{% url 'Salmonella:search_isolateDetail' %}');"> Search </button>
+
+<button class="button is-rounded is-small is-primary is-outlined" onclick='clearHlSelection("theSel");'> Clear selection </button>
+
+
+<br>
+<br>
+
+<div>
+	<hr>
+	<p class="subtitle is-4"> Similar strains <span class="button" onclick="javascript:activateTheModal('simStrainsPuIso');"> ? </span> </p>
+
+	<div id="ajaxSearching">
+		<p> Searching . . . please wait. </p>
+	</div>
+
+	<div id="wrapper">
+		{% include 'Salmonella/isolateTable.html' %}
+	</div>
+
+
+
+	<script type="text/javascript">
+
+		bindEnterToSearch("searchSimStrains");
+
+
+		$(document).ready(function() {
+			$('#ajaxSearching').hide();
+			$('#isolateTable').hide();
+			console.log("document ready, call ajax to load and get data.");
+		});
+
+
+
+	</script>
+</div>
+
+
+
+{% endblock %}
+
+
+# https://stackoverflow.com/questions/2170228/iterate-over-model-instance-field-names-and-values-in-template

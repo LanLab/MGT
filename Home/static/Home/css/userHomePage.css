@@ -1,0 +1,9 @@
+.addToTop { 
+	caption-side: top;
+}
+
+.hidden { display: none; }
+
+.errorlist.nonfield {
+	color: red;
+}

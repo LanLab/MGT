@@ -1,0 +1,108 @@
+{% load common %}
+
+<div id="isolateTable">
+	<br>
+	<table>
+		<tr>
+			<button id="apView" type="button" class="button is-medium" onclick="javascript:doApLayout(JSON.parse('{{isolates|escapejs}}'), {{ colIsoId }}, JSON.parse('{{isoInfo|escapejs}}'), JSON.parse('{{apInfo|escapejs}}'), JSON.parse('{{ mgtInfo|escapejs }}'), JSON.parse('{{epiInfo|escapejs}}'), JSON.parse('{{locInfo|escapejs}}'), JSON.parse('{{islnInfo|escapejs}}'), {{request.session.sessionVar}}, {{ isMgtColor|lower }}, {{ isDst|lower }});"> Sequence types view</button>
+		</tr>
+		<tr>
+			<button id="ccView" type="button" class="button is-medium"  onclick="javascript:doCcLayout(JSON.parse('{{isolates|escapejs}}'), {{ colIsoId }}, JSON.parse('{{isoInfo|escapejs}}'), JSON.parse('{{ccInfo|escapejs}}'), JSON.parse('{{ mgtInfo|escapejs }}'), JSON.parse('{{epiInfo|escapejs}}'), JSON.parse('{{locInfo|escapejs}}'), JSON.parse('{{islnInfo|escapejs}}'), {{request.session.sessionVar}}, {{ isMgtColor|lower }});"> Clonal complexes view</button>
+		</tr>
+	</table>
+	<br>
+	<br>
+
+	{% if isolates|length == 0 %}
+		No isolates here.
+	{% endif %}
+
+	{% if isolates|length > 0 %}
+
+		{% if isAp %}
+			<iframe style="display:none" onload="javascript:doApLayout(JSON.parse('{{isolates|escapejs}}'), {{ colIsoId }}, JSON.parse('{{isoInfo|escapejs}}'), JSON.parse('{{apInfo|escapejs}}'), JSON.parse('{{ mgtInfo|escapejs }}'), JSON.parse('{{epiInfo|escapejs}}'), JSON.parse('{{locInfo|escapejs}}'), JSON.parse('{{islnInfo|escapejs}}'), {{request.session.sessionVar}}, {{ isMgtColor|lower }}, {{ isDst|lower }});"> </iframe>
+		{% else %}
+			<iframe style="display:none" onload="javascript:doCcLayout(JSON.parse('{{isolates|escapejs}}'), {{ colIsoId }}, JSON.parse('{{isoInfo|escapejs}}'), JSON.parse('{{ccInfo|escapejs}}'), JSON.parse('{{ mgtInfo|escapejs }}'), JSON.parse('{{epiInfo|escapejs}}'), JSON.parse('{{locInfo|escapejs}}'), JSON.parse('{{islnInfo|escapejs}}'), {{request.session.sessionVar}}, {{ isMgtColor|lower }});"> </iframe>
+		{% endif %}
+
+
+
+		<div id="div_displayBtns">
+			<table>
+				<tr>
+					<td>
+						<button id="btn_toggleDst" onclick="javascript:toggleDst('btn_toggleDst', true,  JSON.parse('{{isolates|escapejs}}'), {{ colIsoId }}, JSON.parse('{{isoInfo|escapejs}}'), JSON.parse('{{apInfo|escapejs}}'), JSON.parse('{{ccInfo|escapejs}}'), JSON.parse('{{ mgtInfo|escapejs }}'), JSON.parse('{{epiInfo|escapejs}}'), JSON.parse('{{locInfo|escapejs}}'), JSON.parse('{{islnInfo|escapejs}}'), {{request.session.sessionVar}} );"
+						{% if isDst %}
+							class="btn btn-outline-success"
+						{% else %}
+						 	class="btn btn-outline-secondary"
+						{% endif %}
+							> Toggle Dst </button>
+					</td>
+					<td>
+						<button id="btn_toggleCol" onclick="javascript:toggleDst('btn_toggleCol', false,  JSON.parse('{{isolates|escapejs}}'), {{ colIsoId }}, JSON.parse('{{isoInfo|escapejs}}'), JSON.parse('{{apInfo|escapejs}}'), JSON.parse('{{ccInfo|escapejs}}'), JSON.parse('{{ mgtInfo|escapejs }}'), JSON.parse('{{epiInfo|escapejs}}'), JSON.parse('{{locInfo|escapejs}}'), JSON.parse('{{islnInfo|escapejs}}'), {{request.session.sessionVar}});"
+						{% if isMgtColor %}
+							class="btn btn-outline-success"
+						{% else %}
+							class="btn btn-outline-secondary"
+						{% endif %}
+						 > Toggle color </button>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+
+		<div id="mergedIdsInfo">
+			{% if mergedIds %}
+				<script type="text/javascript">
+					printCcMergeInfo('{{mergedIds|escapejs}}', "{{ ccInfo|escapejs }}", "{{ epiInfo|escapejs }}");
+				</script>
+			{% endif %}
+		</div>
+		<br>
+
+
+
+		Total isolates found: {{ isoCount }}
+
+
+
+		<div class="ownPagination">
+
+			{% if pageInfo.has_other_pages and pageInfo.has_previous %}
+				<button class="btn btn-link" onclick="javascript:getOtherPage( 1,  {{ request.session.sessionVar }} ,null);"> first (1) </button>
+				<button class="btn btn-link" onclick="javascript:getOtherPage({{pageInfo.previous_page_number}},  {{ request.session.sessionVar }},null);"> prev ({{ pageInfo.previous_page_number }}) </button>
+			{% endif %}
+
+			Page {{ pageInfo.page }} of {{ pageInfo.num_pages}}
+
+			{% if pageInfo.has_other_pages and pageInfo.has_next %}
+				<button class="btn btn-link" onclick="javascript:getOtherPage({{pageInfo.next_page_number}},  {{ request.session.sessionVar }},null);"> next ({{ pageInfo.next_page_number }}) </button>
+				<button class="btn btn-link" onclick="javascript:getOtherPage({{pageInfo.num_pages}},  {{ request.session.sessionVar }},null);"> last ({{ pageInfo.num_pages }}) </button>
+			{% endif %}
+
+		</div>
+
+
+
+		<table id="infoTable" class="table fixed is-narrow is-bordered">
+		</table>
+
+
+		<br>
+		<div class="csvSearch" id="csvDownload">
+			<button type=button class="btn btn-primary" onclick="javascript:doTheDownload({{ request.session.sessionVar }});">Download the entire set as CSV </button>
+		</div>
+		<br>
+
+		<div id="fetchingcsv" style="display: none">
+			<p> Fetching CSV . . . please wait. </p>
+		</div>
+
+
+	{% endif %}
+
+</div>
+<br>
+<br>

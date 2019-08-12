@@ -1,0 +1,20 @@
+{% extends "Home/base.html" %}
+
+
+{% block titleName %}
+Login 
+{% endblock %} 
+
+{% block page_content %} 
+	
+	Enter details below: 
+	<form method="post" action="">
+		{% csrf_token %} 
+		<table> 
+			{{ form.as_table }}
+		</table>
+		<input type="submit" class="button" value="Login" />
+	</form>
+
+
+{% endblock %}

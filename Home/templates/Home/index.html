@@ -1,0 +1,56 @@
+{% extends "Home/base.html" %}
+{% block titleName %}
+Home
+{% endblock %}
+
+{% block page_content %}
+	Welcome, the current statistics:
+	<br>
+	<br>
+	{% for appName, dict_vals in stats.items %}
+	<div class="container-fluid">
+			{# { appName } #}
+			{% if dict_vals %}
+
+				<article class="tile notification is-success">
+					<div class="content">
+						<p class="title is-4"> <a href="{% url appName|add:':index'  %}"> {{ dict_vals.organism|safe  }} </a> </p>
+						<div class="content">
+
+							<table>
+								<tr>
+									<td>  Up and running </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td> Total public isolates: </td>
+									<td> {{ dict_vals.num_publicIsolates }} </td>
+								</tr>
+							</table>
+
+						</div>
+					</div>
+				</article>
+
+
+			{% else %}
+
+				<article class="tile notification is-light">
+					<div class="content">
+						<p class="title is-4"> <a href="{% url appName|add:':index'  %}"> {{ appName }} </a> </p>
+						<div class="content">
+							<p> Not up and running.</p>
+						</div>
+					</div>
+				</article>
+
+			{% endif %}
+
+
+	</div>
+	<br>
+	{% endfor %}
+
+
+
+{% endblock %}

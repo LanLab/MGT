@@ -1,0 +1,89 @@
+{% extends "Home/base.html" %}
+
+{% block titleName %}
+Register
+{% endblock %}
+
+{% block page_content %}
+
+	<h2 class="title is-3"> Register your details </h2>
+
+
+  <form method="post" action="">
+	{% csrf_token %}
+	<table>
+		<tr>
+			<td>
+				<label for="id_username">Username:</label>
+			</td>
+			<td>
+				{{ form.username }}
+			</td>
+			<td>
+				{% if form.username.errors %}
+					<p class="errors">{{ form.username.errors.as_text }}</p>
+				{% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="id_email">Email address:</label>
+			</td>
+			<td>
+				{{ form.email }}
+			</td>
+			<td>
+				{% if form.email.errors %}
+				 	<p class="errors">{{ form.email.errors.as_text }}</p>
+				{% endif %}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				 <label for="id_password1">Password:</label>
+			</td>
+
+			<td>
+				{{ form.password1 }}
+			</td>
+
+			<td>
+				{% if form.password1.errors %}
+		          <p class="errors">{{ form.password1.errors.as_text }}</p>
+		        {% endif %}
+			</td>
+
+		</tr>
+
+
+
+
+		<tr>
+			<td>
+				<label for="id_password2">Password (type again to catch typos):</label>
+			</td>
+			<td>
+				{{ form.password2 }}
+			</td>
+			<td>
+				{% if form.password2.errors %}
+				  <p class="errors">{{ form.password2.errors.as_text }}</p>
+				{% endif %}
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+			<p class="submit"><input class="btn btn-info" type="submit" value="Register" class="btn"></p>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+		</tr>
+
+	</table>
+  </form>
+
+{% endblock %}

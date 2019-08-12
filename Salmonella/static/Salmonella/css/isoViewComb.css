@@ -1,0 +1,24 @@
+.incorrect {
+	border:2px solid red;
+}
+#searchDivs {
+	display: table;
+	table-layout: fixed;
+
+	width:90%;
+	height:100px;
+}
+
+
+#searchDivs div {
+	display: table-cell;
+	height:100px;
+}
+
+/* table.fixed { table-layout:fixed; width:100%; word-break:break-all;} */
+
+table.fixed {
+	display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}

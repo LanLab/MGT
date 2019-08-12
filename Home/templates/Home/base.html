@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	{% load static %}
+	<script
+	  src="https://code.jquery.com/jquery-3.4.1.min.js"
+	  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	  crossorigin="anonymous"></script>
+	<script
+	  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+	  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+	  crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+
+
+
+	<!-- link rel="stylesheet" type="text/css" href="{% static 'Home/javascript/lib/DataTables/datatables.min.js' %}"/>
+	<script type="text/javascript" src="{% static 'Home/javascript/lib/DataTables/datatables.min.js' %}"></script -->
+
+
+	{% block head_static %}{% endblock %}
+
+
+	<title>
+		MGTdb - {% block titleName %} {% endblock %}
+	</title>
+</head>
+
+
+<body>
+	{% load for_display %}
+
+	{% url 'login' as url_login %}
+	{% url 'django_registration_register' as url_register %}
+	{% url 'django_registration_disallowed' as url_cannotRegister %}
+	{% url 'Home:home' as url_userHome %}
+	{% url 'Home:index' as url_index %}
+	{% url 'Home:about' as url_about %}
+	{% url 'Home:contact' as url_contact %}
+	{% url 'Home:faq' as url_faq %}
+
+	<section class="hero is-info">
+		<div class="hero-body">
+			<div class="container">
+				<h1 class="title is-1">  MGT database </h1>
+				<h2 class="subtitle"> Multi-level Genome Typing database for bacterial isolates </h3>
+			</div>
+		</div>
+	</section>
+
+	<ul class="nav">
+		<li class="nav-item">
+			<a class="nav-link {% isSame url_about %}" href="{{ url_about }}"> About </a>
+		</li>
+
+		<li class="nav-item">
+			<a class="nav-link {% isSame url_index %}" href="{{ url_index }}"> Species </a>
+		</li>
+
+		{% if user.is_authenticated %}
+			<li class="nav-item">
+				<a class="nav-link {% isSame url_userHome %}" href="{{ url_userHome }}"> Projects</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'logout' %}">Logout</a>
+			</li>
+		{% else %}
+
+			<li class="nav-item">
+				<a class="nav-link {% isSame url_login %}" href="{{ url_login }}">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link {% isSame url_cannotRegister %}" href="{{ url_register }}">Register</a>
+			</li>
+
+		{% endif %}
+
+		<li class="nav-item">
+			<a class="nav-link {% isSame url_contact %}" href="{{ url_contact }}"> Contact us </a>
+		</li>
+
+
+		<li class="nav-item">
+			<a class="nav-link {% isSame url_faq %}" href="{{ url_faq }}"> FAQ </a>
+		</li>
+	</ul>
+	<hr>
+
+
+
+
+	{% block page_content %} {% endblock %}
+</body>
+
+</html>
